@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <title>撮影依頼フォーム</title>
   <style>
     body { background-color: #fff; color: #333; font-family: sans-serif; }
-    h1 { color: orange; }
+    h1 { color: orange; text-align: center; }
     form { max-width: 400px; margin: auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }
     label { display: block; margin-top: 10px; font-weight: bold; }
     input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
@@ -29,7 +29,9 @@
       fetch("YOUR_GAS_WEBAPP_URL", {
         method: "POST",
         body: new FormData(this)
-      }).then(r => alert("送信が完了しました！"));
+      })
+      .then(r => r.text())
+      .then(res => alert("送信が完了しました！"));
     });
   </script>
 </body>
