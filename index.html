@@ -1,38 +1,229 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>2日納品依頼フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ff8c00" />
   <style>
-    body { background-color: #fff; color: #333; font-family: sans-serif; }
-    h1 { color: orange; text-align: center; }
-    form { max-width: 400px; margin: auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
-    button { background: orange; color: white; border: none; padding: 10px; margin-top: 15px; cursor: pointer; border-radius: 4px; }
-    button:hover { background: #e69500; }
+    :root{
+      --bg:#ffffff;
+      --fg:#222222;
+      --muted:#6b7280;
+      --card:#f8f8f8;
+      --accent:#ff8c00;
+      --accent-press:#e57f00;
+      --border:#e5e7eb;
+      --radius:14px;
+      --space:14px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b0b0c; --fg:#e6e6e6; --muted:#9aa0a6; --card:#121214; --border:#2a2b2f;
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      line-height:1.6;
+      -webkit-text-size-adjust:100%;
+      font-size:16px; /* iOSの拡大防止 */
+    }
+    header{
+      padding:24px 16px 8px;
+      text-align:center;
+    }
+    h1{
+      margin:0;
+      font-size:clamp(20px, 4.5vw, 28px);
+      color:var(--accent);
+      letter-spacing:.02em;
+      font-weight:800;
+    }
+    p.sub{
+      margin:.25rem 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .wrap{
+      max-width:720px;
+      margin:0 auto;
+      padding:16px;
+    }
+    form{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:clamp(16px, 3.5vw, 24px);
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .row{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-top:var(--space);
+    }
+
+    label{
+      font-weight:700;
+      font-size:14px;
+    }
+
+    input{
+      width:100%;
+      padding:14px 12px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#fff;
+      color:#111;
+      font-size:16px; /* iOS拡大防止 */
+      outline:none;
+      transition:border-color .15s, box-shadow .15s;
+    }
+    @media (prefers-color-scheme: dark){
+      input{background:#1a1b1e; color:#e6e6e6}
+    }
+    input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(255,140,0,.18);
+    }
+    input::placeholder{color:#a3a3a3}
+
+    .help{font-size:12px; color:var(--muted);}
+
+    .actions{
+      margin-top:calc(var(--space) * 1.25);
+      display:flex; gap:10px; align-items:center;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      border-radius:999px;
+      background:var(--accent);
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.02em;
+      padding:14px 18px;
+      cursor:pointer;
+      width:100%;
+      transition:transform .05s ease, background .15s ease, box-shadow .15s ease;
+      box-shadow: 0 6px 14px rgba(255,140,0,.22);
+      touch-action: manipulation;
+    }
+    button:active{ transform: translateY(1px); background:var(--accent-press); }
+    button[disabled]{ opacity:.65; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    .msg{
+      margin-top:10px;
+      font-size:14px;
+      display:none;
+    }
+    .msg.ok{ color:#0a7f3f; }
+    .msg.ng{ color:#b00020; }
+
+    /* タブレット以上でフォーム幅を少し増やす */
+    @media (min-width: 560px){
+      form{ padding:28px; }
+    }
   </style>
 </head>
 <body>
-  <h1>2日納品依頼フォーム</h1>
-  <form id="shootForm">
-    <label>撮影ID <input type="text" name="shootId" required></label>
-    <label>センター名 <input type="text" name="centerName" required></label>
-    <label>発注者 <input type="text" name="orderer" required></label>
-    <label>メールアドレス <input type="email" name="email" required></label>
-    <label>電話番号 <input type="tel" name="phone" required></label>
-    <button type="submit">送信</button>
-  </form>
+  <header>
+    <h1>2日納品依頼フォーム</h1>
+    <p class="sub">スマホ最適化・入力補助付き</p>
+  </header>
+
+  <div class="wrap">
+    <form id="shootForm" novalidate>
+      <div class="row">
+        <label for="shootId">撮影ID</label>
+        <input id="shootId" name="shootId" type="text" inputmode="text" autocomplete="off" placeholder="例：ORD-240915-001" required />
+        <div class="help">社内/依頼管理のIDを入力</div>
+      </div>
+
+      <div class="row">
+        <label for="centerName">センター名</label>
+        <input id="centerName" name="centerName" type="text" autocomplete="organization" placeholder="例：東京第1センター" required />
+      </div>
+
+      <div class="row">
+        <label for="orderer">発注者</label>
+        <input id="orderer" name="orderer" type="text" autocomplete="name" placeholder="担当者名" required />
+      </div>
+
+      <div class="row">
+        <label for="email">メールアドレス</label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required />
+      </div>
+
+      <div class="row">
+        <label for="phone">電話番号</label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09012345678" pattern="^[0-9+\-() ]{8,}$" required />
+        <div class="help">半角数字・+・( )・-・スペース可</div>
+      </div>
+
+      <div class="actions">
+        <button id="submitBtn" type="submit">送信</button>
+      </div>
+
+      <div id="msgOk" class="msg ok" role="status" aria-live="polite">送信が完了しました！</div>
+      <div id="msgNg" class="msg ng" role="alert" aria-live="assertive">送信に失敗しました。電波状況を確認してもう一度お試しください。</div>
+    </form>
+  </div>
+
   <script>
-    document.getElementById("shootForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      fetch("https://script.google.com/macros/s/AKfycbxLPt8PYv3yXkETp8d88RsL9LYBa9vDXwI_oTDbiGS85FxcdhrGtQ_gfM9pl-8Zk2ie/exec", {
-        method: "POST",
-        body: new FormData(this)
-      })
-      .then(r => r.text())
-      .then(res => alert("送信が完了しました！"));
-    });
+    (function () {
+      const form = document.getElementById("shootForm");
+      const btn  = document.getElementById("submitBtn");
+      const ok   = document.getElementById("msgOk");
+      const ng   = document.getElementById("msgNg");
+
+      const ENDPOINT = "https://script.google.com/macros/s/AKfycbxLPt8PYv3yXkETp8d88RsL9LYBa9vDXwI_oTDbiGS85FxcdhrGtQ_gfM9pl-8Zk2ie/exec";
+
+      const show = (el) => { el.style.display = "block"; };
+      const hide = (el) => { el.style.display = "none"; };
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hide(ok); hide(ng);
+
+        // ネイティブ検証を走らせる
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "送信中…";
+
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: "POST",
+            body: new FormData(form),
+          });
+
+          // GASのレスポンス形態に依存せず成功扱いを広めに
+          if (res.ok) {
+            show(ok);
+            form.reset();
+          } else {
+            show(ng);
+          }
+        } catch (err) {
+          show(ng);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "送信";
+        }
+      }, { passive: false });
+    })();
   </script>
 </body>
 </html>
