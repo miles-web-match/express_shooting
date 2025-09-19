@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>撮影依頼フォーム</title>
+  <style>
+    body { background-color: #fff; color: #333; font-family: sans-serif; }
+    h1 { color: orange; }
+    form { max-width: 400px; margin: auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: orange; color: white; border: none; padding: 10px; margin-top: 15px; cursor: pointer; border-radius: 4px; }
+    button:hover { background: #e69500; }
+  </style>
+</head>
+<body>
+  <h1>撮影依頼フォーム</h1>
+  <form id="shootForm">
+    <label>撮影ID <input type="text" name="shootId" required></label>
+    <label>センター名 <input type="text" name="centerName" required></label>
+    <label>発注者 <input type="text" name="orderer" required></label>
+    <label>メールアドレス <input type="email" name="email" required></label>
+    <label>電話番号 <input type="tel" name="phone" required></label>
+    <button type="submit">送信</button>
+  </form>
+  <script>
+    document.getElementById("shootForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      fetch("YOUR_GAS_WEBAPP_URL", {
+        method: "POST",
+        body: new FormData(this)
+      }).then(r => alert("送信が完了しました！"));
+    });
+  </script>
+</body>
+</html>
